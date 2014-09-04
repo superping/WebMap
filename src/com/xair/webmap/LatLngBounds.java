@@ -7,6 +7,7 @@ import com.xair.webmap.model.LatLng;
 public class LatLngBounds {
 	LatLng northeast = new LatLng(0, 0);
 	LatLng southwest = new LatLng(0, 0);
+	boolean firstUse = true;
 
 	static Builder builder;
 
@@ -28,16 +29,23 @@ public class LatLngBounds {
 	}
 
 	public LatLngBounds including(LatLng point) {
-		if (point.latitude > this.northeast.latitude) {
+		if (firstUse) {
 			this.northeast.latitude = point.latitude;
-		} else if (point.latitude < this.southwest.latitude) {
+			this.northeast.longitude = point.longitude;
 			this.southwest.latitude = point.latitude;
-		}
-
-		if (point.longitude > this.northeast.longitude) {
-			this.northeast.longitude = point.longitude;
-		} else if (point.longitude < this.southwest.longitude) {
-			this.northeast.longitude = point.longitude;
+			this.southwest.longitude = point.longitude;
+			firstUse = false;
+		} else {
+			if (point.latitude > this.northeast.latitude) {
+				this.northeast.latitude = point.latitude;
+			} else if (point.latitude < this.southwest.latitude) {
+				this.southwest.latitude = point.latitude;
+			}
+			if (point.longitude > this.northeast.longitude) {
+				this.northeast.longitude = point.longitude;
+			} else if (point.longitude < this.southwest.longitude) {
+				this.northeast.longitude = point.longitude;
+			}
 		}
 
 		return this;
@@ -49,18 +57,20 @@ public class LatLngBounds {
 		public LatLngBounds build() {
 			LatLngBounds mLatLngBounds = new LatLngBounds();
 			for (LatLng latlng : list) {
-				if (latlng.latitude > mLatLngBounds.northeast.latitude) {
-					mLatLngBounds.northeast.latitude = latlng.latitude;
-				} else if (latlng.latitude < mLatLngBounds.southwest.latitude) {
-					mLatLngBounds.southwest.latitude = latlng.latitude;
-				}
-
-				if (latlng.longitude > mLatLngBounds.northeast.longitude) {
-					mLatLngBounds.northeast.longitude = latlng.longitude;
-				} else if (latlng.longitude < mLatLngBounds.southwest.longitude) {
-					mLatLngBounds.northeast.longitude = latlng.longitude;
-				}
+				mLatLngBounds.including(latlng);
+//				if (latlng.latitude > mLatLngBounds.northeast.latitude) {
+//					mLatLngBounds.northeast.latitude = latlng.latitude;
+//				} else if (latlng.latitude < mLatLngBounds.southwest.latitude) {
+//					mLatLngBounds.southwest.latitude = latlng.latitude;
+//				}
+//
+//				if (latlng.longitude > mLatLngBounds.northeast.longitude) {
+//					mLatLngBounds.northeast.longitude = latlng.longitude;
+//				} else if (latlng.longitude < mLatLngBounds.southwest.longitude) {
+//					mLatLngBounds.northeast.longitude = latlng.longitude;
+//				}
 			}
+			
 			return mLatLngBounds;
 		}
 

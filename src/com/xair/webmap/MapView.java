@@ -26,7 +26,7 @@ public class MapView extends View {
 		webview.getSettings().setDomStorageEnabled(true);
 		webview.setWebViewClient(new WebViewClient());
 		map = WebMap.getInstance();
-		map.init(context, webview);
+		map.init(context, webview, options);
 
 		Log.d("mapview", "" + webview.hashCode());
 

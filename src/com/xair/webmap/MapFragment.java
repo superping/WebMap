@@ -20,6 +20,7 @@ public class MapFragment extends Fragment {
 	private static final String MAP_URL = "file:///android_asset/src/example.html";
 	WebView webview;
 	WebMap map;
+	static WebMapOptions Mapoptions;
 
 	public WebMap getMap() {
 		return map;
@@ -33,6 +34,7 @@ public class MapFragment extends Fragment {
 	static public MapFragment newInstance(WebMapOptions options) {
 		instance = new MapFragment();
 		// TODO init map
+		Mapoptions = options;
 		return instance;
 	}
 
@@ -64,7 +66,7 @@ public class MapFragment extends Fragment {
 		webview.getSettings().setDomStorageEnabled(true);
 		webview.setWebViewClient(new WebViewClient());
 		map = WebMap.getInstance();
-		map.init(getActivity(), webview);
+		map.init(getActivity(), webview, Mapoptions);
 
 		Log.d("mapview", "" + webview.hashCode());
 //		webview.addJavascriptInterface(new JavaScriptInterface(), "markers");

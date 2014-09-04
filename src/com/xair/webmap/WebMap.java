@@ -55,7 +55,8 @@ public class WebMap implements Callback {
 		mCaremaPosition = new CameraPosition();
 	}
 
-	protected void init(Context context, WebView webview) {
+	protected void init(Context context, final WebView webview,
+			final WebMapOptions options) {
 		this.webview = webview;
 		BitmapDescriptorFactory.init(context);
 		jsinterface = new MapjavascriptInterface();
@@ -67,6 +68,38 @@ public class WebMap implements Callback {
 		webview.setWebViewClient(new WebViewClient() {
 			public void onPageFinished(WebView view, String url) {
 				Log.d("webview", "page finished");
+				JSONObject markerJSON = new JSONObject();
+				try {
+
+					if (options.camera != null) {
+						markerJSON.put("latitude",
+								options.camera.target.latitude);
+						markerJSON.put("longitude",
+								options.camera.target.longitude);
+						markerJSON.put("zoom", options.camera.zoom);
+					}
+					markerJSON.put("compassEnabled", options.compassEnabled);
+					markerJSON.put("RotateGesturesEnabled",
+							options.RotateGesturesEnabled);
+					markerJSON.put("ScaleControlsEnabled",
+							options.ScaleControlsEnabled);
+					markerJSON.put("ScrollGesturesEnabled",
+							options.ScrollGesturesEnabled);
+					markerJSON.put("TiltGesturesEnabled",
+							options.TiltGesturesEnabled);
+					markerJSON.put("ZoomControlsEnabled",
+							options.ZoomControlsEnabled);
+					markerJSON.put("ZoomGesturesEnabled",
+							options.ZoomGesturesEnabled);
+
+					String str = markerJSON.toString();
+
+					Request req = new Request("initMap", str,
+							Request.Type_NotResponse);
+					addRequest(req);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 				jsinterface.OnLoaded();
 			}
 		});
@@ -544,77 +577,77 @@ public class WebMap implements Callback {
 	Request waitingReq;
 	Response waitingRes;
 	boolean isAlive;
-//	Runnable run = new Runnable() {
-//
-//		@Override
-//		public void run() {
-//			isAlive = true;
-//			while (isAlive) {
-//				if (noresponseList.size() > 0) {
-//					if (responseList.size() == 0) {
-//						synchronized (noresponseList) {
-//							Request req = noresponseList.pop();
-//							Message msg = threadHandler.obtainMessage(
-//									REQUEST_NORES, req);
-//							threadHandler.sendMessage(msg);
-//						}
-//					}
-//
-//				}
-//				if (noresponseList.size() == 0 || responseList.size() > 0) {
-//					isAlive = false;
-//				} else
-//					try {
-//						Thread.sleep(10);
-//					} catch (InterruptedException e) {
-//						e.printStackTrace();
-//					}
-//
-//			}
-//		}
-//	};
+	// Runnable run = new Runnable() {
+	//
+	// @Override
+	// public void run() {
+	// isAlive = true;
+	// while (isAlive) {
+	// if (noresponseList.size() > 0) {
+	// if (responseList.size() == 0) {
+	// synchronized (noresponseList) {
+	// Request req = noresponseList.pop();
+	// Message msg = threadHandler.obtainMessage(
+	// REQUEST_NORES, req);
+	// threadHandler.sendMessage(msg);
+	// }
+	// }
+	//
+	// }
+	// if (noresponseList.size() == 0 || responseList.size() > 0) {
+	// isAlive = false;
+	// } else
+	// try {
+	// Thread.sleep(10);
+	// } catch (InterruptedException e) {
+	// e.printStackTrace();
+	// }
+	//
+	// }
+	// }
+	// };
 	Thread thread;
 
 	public Response addRequest(Request req) {
 		Response res = new Response();
 		if (req.requestType == Request.Type_NeedResponse) {
-//			synchronized (responseList) {
-//				responseList.add(req);
-//			}
-//			res.sessionId = req.sessionId;
-//			res.req = req;
-//			waitsponseList.add(res);
-//
-//			String reqStr = "javascript:" + req.funcString + "("
-//					+ req.paramString + "," + req.sessionId + ")";
-//			Log.d("request", reqStr);
-//			isAlive = false;
-//			if (thread != null) {
-//				while (thread.isAlive())
-//					;
-//			}
-//			
-//			while (res.ans == null) {
-//				webview.loadUrl(reqStr);
-//				synchronized (req) {
-//					try {
-//						boolean flag = req.mSemaphore.tryAcquire(20,
-//								TimeUnit.MILLISECONDS);
-//					} catch (InterruptedException e) {
-//						e.printStackTrace();
-//					}
-//				}
-//			}
-//			synchronized (responseList) {
-//				responseList.pop();
-//			}
-//			startThread();
+			// synchronized (responseList) {
+			// responseList.add(req);
+			// }
+			// res.sessionId = req.sessionId;
+			// res.req = req;
+			// waitsponseList.add(res);
+			//
+			// String reqStr = "javascript:" + req.funcString + "("
+			// + req.paramString + "," + req.sessionId + ")";
+			// Log.d("request", reqStr);
+			// isAlive = false;
+			// if (thread != null) {
+			// while (thread.isAlive())
+			// ;
+			// }
+			//
+			// while (res.ans == null) {
+			// webview.loadUrl(reqStr);
+			// synchronized (req) {
+			// try {
+			// boolean flag = req.mSemaphore.tryAcquire(20,
+			// TimeUnit.MILLISECONDS);
+			// } catch (InterruptedException e) {
+			// e.printStackTrace();
+			// }
+			// }
+			// }
+			// synchronized (responseList) {
+			// responseList.pop();
+			// }
+			// startThread();
 		} else if (req.requestType == Request.Type_NotResponse) {
-//			synchronized (noresponseList) {
-//				noresponseList.add(req);
-//			}
-//			startThread();
-//			Request req = (Request) msg.obj;
+			// synchronized (noresponseList) {
+			// noresponseList.add(req);
+			// }
+			// startThread();
+			// Request req = (Request) msg.obj;
 			String noreqStr = "javascript:" + req.funcString + "("
 					+ req.paramString + ")";
 			Log.d("request", noreqStr);
@@ -623,15 +656,15 @@ public class WebMap implements Callback {
 		return res;
 	}
 
-//	void startThread() {
-//		if (thread == null) {
-//			thread = new Thread(run);
-//			thread.start();
-//		} else if (!thread.isAlive()) {
-//			thread = new Thread(run);
-//			thread.start();
-//		}
-//	}
+	// void startThread() {
+	// if (thread == null) {
+	// thread = new Thread(run);
+	// thread.start();
+	// } else if (!thread.isAlive()) {
+	// thread = new Thread(run);
+	// thread.start();
+	// }
+	// }
 
 	Response findResponse(int sessionId) {
 		for (Response res : waitsponseList) {
