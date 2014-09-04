@@ -3,6 +3,7 @@ package com.xair.webmap.model;
 public class MarkerOptions {
 	float anchorU = 0.5f;
 	float anchorV = 0.5f;
+	int zIndex = 0;
 
 	public MarkerOptions anchor(float u, float v) {
 		anchorU = u;
@@ -75,6 +76,15 @@ public class MarkerOptions {
 	// Gets the rotation set for this MarkerOptions object.
 	public float getRotation() {
 		return this.rotation;
+	}
+	
+	public MarkerOptions zIndex(int zIndex){
+		this.zIndex = zIndex;
+		return this;
+	}
+	
+	public int getZIndex(){
+		return this.zIndex;
 	}
 
 }

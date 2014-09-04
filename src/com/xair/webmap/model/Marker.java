@@ -17,6 +17,7 @@ public class Marker {
 	boolean draggable;
 	boolean visible;
 	float angle;
+	int zIndex;
 	BitmapDescriptor icon;
 
 	// TODO
@@ -34,6 +35,7 @@ public class Marker {
 		this.visible = options.visible;
 		this.anchorU = options.anchorU;
 		this.anchorV = options.anchorV;
+		this.zIndex = options.zIndex;
 
 		this.callback = callback;
 
@@ -58,11 +60,12 @@ public class Marker {
 			markerJSON.put("visible", visible);
 			markerJSON.put("anchorU", anchorU);
 			markerJSON.put("anchorV", anchorV);
+			markerJSON.put("zIndex", zIndex);
 
 			String str = markerJSON.toString();
 			// webview.loadUrl("javascript:createMarker(" + str + ")");
-//			String requestStr = "javascript:createMarker(" + str + ")";
-//			Request req = new Request(requestStr, Request.Type_NotResponse);
+			// String requestStr = "javascript:createMarker(" + str + ")";
+			// Request req = new Request(requestStr, Request.Type_NotResponse);
 			Request req = new Request("createMarker", str,
 					Request.Type_NotResponse);
 			map.addRequest(req);
@@ -77,8 +80,8 @@ public class Marker {
 			markerJSON.put("id", index);
 			String str = markerJSON.toString();
 			// webview.loadUrl("javascript:removeMarker(" + str + ")");
-//			String requestStr = "javascript:removeMarker(" + str + ")";
-//			Request req = new Request(requestStr, Request.Type_NotResponse);
+			// String requestStr = "javascript:removeMarker(" + str + ")";
+			// Request req = new Request(requestStr, Request.Type_NotResponse);
 			Request req = new Request("removeMarker", str,
 					Request.Type_NotResponse);
 			map.addRequest(req);
@@ -119,8 +122,8 @@ public class Marker {
 			markerJSON.put("id", index);
 			String str = markerJSON.toString();
 			// webview.loadUrl("javascript:removeMarker(" + str + ")");
-//			String requestStr = "javascript:removeMarker(" + str + ")";
-//			Request req = new Request(requestStr, Request.Type_NotResponse);
+			// String requestStr = "javascript:removeMarker(" + str + ")";
+			// Request req = new Request(requestStr, Request.Type_NotResponse);
 			Request req = new Request("removeMarker", str,
 					Request.Type_NotResponse);
 			map.addRequest(req);
@@ -140,8 +143,8 @@ public class Marker {
 			markerJSON.put("anchorV", anchorV);
 			String str = markerJSON.toString();
 			// webview.loadUrl("javascript:setMarkerProperty(" + str + ")");
-//			String requestStr = "javascript:setMarkerProperty(" + str + ")";
-//			Request req = new Request(requestStr, Request.Type_NotResponse);
+			// String requestStr = "javascript:setMarkerProperty(" + str + ")";
+			// Request req = new Request(requestStr, Request.Type_NotResponse);
 			Request req = new Request("setMarkerProperty", str,
 					Request.Type_NotResponse);
 			map.addRequest(req);
@@ -160,8 +163,8 @@ public class Marker {
 			markerJSON.put("draggable", draggable);
 			String str = markerJSON.toString();
 			// webview.loadUrl("javascript:setMarkerProperty(" + str + ")");
-//			String requestStr = "javascript:setMarkerProperty(" + str + ")";
-//			Request req = new Request(requestStr, Request.Type_NotResponse);
+			// String requestStr = "javascript:setMarkerProperty(" + str + ")";
+			// Request req = new Request(requestStr, Request.Type_NotResponse);
 			Request req = new Request("setMarkerProperty", str,
 					Request.Type_NotResponse);
 			map.addRequest(req);
@@ -182,8 +185,8 @@ public class Marker {
 			markerJSON.put("width", icon.getWidth());
 			String str = markerJSON.toString();
 			// webview.loadUrl("javascript:setMarkerProperty(" + str + ")");
-//			String requestStr = "javascript:setMarkerProperty(" + str + ")";
-//			Request req = new Request(requestStr, Request.Type_NotResponse);
+			// String requestStr = "javascript:setMarkerProperty(" + str + ")";
+			// Request req = new Request(requestStr, Request.Type_NotResponse);
 			Request req = new Request("setMarkerProperty", str,
 					Request.Type_NotResponse);
 			map.addRequest(req);
@@ -203,8 +206,8 @@ public class Marker {
 			markerJSON.put("longitude", position.longitude);
 			String str = markerJSON.toString();
 			// webview.loadUrl("javascript:setMarkerProperty(" + str + ")");
-//			String requestStr = "javascript:setMarkerProperty(" + str + ")";
-//			Request req = new Request(requestStr, Request.Type_NotResponse);
+			// String requestStr = "javascript:setMarkerProperty(" + str + ")";
+			// Request req = new Request(requestStr, Request.Type_NotResponse);
 			Request req = new Request("setMarkerProperty", str,
 					Request.Type_NotResponse);
 			map.addRequest(req);
@@ -227,8 +230,8 @@ public class Marker {
 			markerJSON.put("rotation", angle);
 			String str = markerJSON.toString();
 			// webview.loadUrl("javascript:setMarkerProperty(" + str + ")");
-//			String requestStr = "javascript:setMarkerProperty(" + str + ")";
-//			Request req = new Request(requestStr, Request.Type_NotResponse);
+			// String requestStr = "javascript:setMarkerProperty(" + str + ")";
+			// Request req = new Request(requestStr, Request.Type_NotResponse);
 			Request req = new Request("setMarkerProperty", str,
 					Request.Type_NotResponse);
 			map.addRequest(req);
@@ -247,13 +250,35 @@ public class Marker {
 			markerJSON.put("visible", visible);
 			String str = markerJSON.toString();
 			// webview.loadUrl("javascript:setMarkerProperty(" + str + ")");
-//			String requestStr = "javascript:(" + str + ")";
+			// String requestStr = "javascript:(" + str + ")";
 			Request req = new Request("setMarkerProperty", str,
 					Request.Type_NotResponse);
 			map.addRequest(req);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void setZIndex(int zIndex) {
+		this.zIndex = zIndex;
+		JSONObject markerJSON = new JSONObject();
+		try {
+			markerJSON.put("property", "zIndex");
+			markerJSON.put("id", index);
+			markerJSON.put("zIndex", zIndex);
+			String str = markerJSON.toString();
+			// webview.loadUrl("javascript:setMarkerProperty(" + str + ")");
+			// String requestStr = "javascript:(" + str + ")";
+			Request req = new Request("setMarkerProperty", str,
+					Request.Type_NotResponse);
+			map.addRequest(req);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public int getZIndex() {
+		return this.zIndex;
 	}
 
 }

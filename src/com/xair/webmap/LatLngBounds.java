@@ -58,19 +58,7 @@ public class LatLngBounds {
 			LatLngBounds mLatLngBounds = new LatLngBounds();
 			for (LatLng latlng : list) {
 				mLatLngBounds.including(latlng);
-//				if (latlng.latitude > mLatLngBounds.northeast.latitude) {
-//					mLatLngBounds.northeast.latitude = latlng.latitude;
-//				} else if (latlng.latitude < mLatLngBounds.southwest.latitude) {
-//					mLatLngBounds.southwest.latitude = latlng.latitude;
-//				}
-//
-//				if (latlng.longitude > mLatLngBounds.northeast.longitude) {
-//					mLatLngBounds.northeast.longitude = latlng.longitude;
-//				} else if (latlng.longitude < mLatLngBounds.southwest.longitude) {
-//					mLatLngBounds.northeast.longitude = latlng.longitude;
-//				}
 			}
-			
 			return mLatLngBounds;
 		}
 
